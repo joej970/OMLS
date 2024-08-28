@@ -1,0 +1,147 @@
+{
+    "configurations": [
+        {
+            "name": "Win64",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.22000.0",
+            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "windows-gcc-x64"
+        },
+        {
+            "name": "Win64_DEBUG",
+            "includePath": [
+                "d:\\Faks\\MagistrskaNaloga\\SW_PC/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "TEST_OUT"
+            ],
+            "windowsSdkVersion": "10.0.22000.0",
+            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+            "cStandard": "c17",
+            "intelliSenseMode": "windows-gcc-x64",
+            "cppStandard": "c++20",
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        },
+        {
+            "name": "OPTO_PC",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/Program Files (x86)/Intel/oneAPI/2024.2/include/sycl"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "TIMING_EN",
+                "INCLUDE_OPENCL"
+            ],
+            "windowsSdkVersion": "10.0.22000.0",
+            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+            "cStandard": "c17",
+            "intelliSenseMode": "windows-gcc-x64",
+            "cppStandard": "c++20",
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**",
+                    "C:/msys64/ucrt64/**"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        },
+        {
+            "name": "MAIN_DEMO",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "MAIN_DEMO"
+            ],
+            "windowsSdkVersion": "10.0.22000.0",
+            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+            "cStandard": "c17",
+            "intelliSenseMode": "windows-gcc-x64",
+            "cppStandard": "c++20",
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**",
+                    "C:/msys64/ucrt64/**"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        },
+        {
+            "name": "MAIN_DEMO_MINIMAL",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "MAIN_DEMO_MINIMAL"
+            ],
+            "windowsSdkVersion": "10.0.22000.0",
+            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+            "cStandard": "c17",
+            "intelliSenseMode": "windows-gcc-x64",
+            "cppStandard": "c++20",
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**",
+                    "C:/msys64/ucrt64/**"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        },
+        {
+            "name": "MAIN",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "MAIN"
+            ],
+            "windowsSdkVersion": "10.0.22000.0",
+            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+            "cStandard": "c17",
+            "intelliSenseMode": "windows-gcc-x64",
+            "cppStandard": "c++20",
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**",
+                    "C:/msys64/ucrt64/**"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}

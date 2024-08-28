@@ -1,0 +1,84 @@
+
+*.asv
+# Prerequisites
+.d
+
+# Compiled Object files
+.slo
+.lo
+.o
+.obj
+
+# Precompiled Headers
+.gch
+.pch
+
+# Compiled Dynamic libraries
+.so
+.dylib
+.dll
+
+# Fortran module files
+.mod
+.smod
+
+# Compiled Static libraries
+.lai
+.la
+.a
+.lib
+
+# Executables
+*.exe
+.out
+.app
+
+# Data
+*.bin
+*.csv
+#*.zip
+*.xlsx
+*.XcppX
+*.XhppX
+*.xlsm
+Matlab/createExcelMacro.m
+Matlab/HighligtHighestInLine.txt
+images/WCE/original/
+FPGA/axis_peak_7.2/
+images/verification/dump/
+FPGA/compress_core_0.1/xsim/python/KODAK_dataset/
+images/KODAK_dataset/dump/
+*.pdf
+FPGA/model_sim/
+FPGA/compress_core_1.0/compress_core_1.0.cache/
+FPGA/compress_core_1.0/compress_core_1.0.sim/
+FPGA/compress_core_1.0/compress_core_1.0.runs/synth_1/project.wdf
+FPGA/compress_core_1.0/compress_core_1.0.runs/
+images/KODAK_dataset/png_jpg_2k/
+*.jpg
+FPGA/axis_omls_compression_1.0/
+FPGA/axis_omls_compression_1.0.zip
+FPGA/axis_peak_7.2.zip
+images/KID_1/KID_dataset.zip
+images/KID_2/kid_dataset_2.zip
+images/KODAK_dataset/results/report_KODAK.zip
+.vscode/launch.json
+.vscode/tasks.json
+CPP_encoder_decoder/OMLS_lib/bin/
+CPP_encoder_decoder/OMLS_lib/build/
+FPGA/post_syn_sim_rtl/
+*.bmp
+CPP_encoder_decoder/Decoder_lib/bin/
+CPP_encoder_decoder/Decoder_lib/build/ALL_BUILD.vcxproj
+CPP_encoder_decoder/Decoder_lib/build/ALL_BUILD.vcxproj.filters
+CPP_encoder_decoder/Decoder_lib/build/
+images/lite_dataset/dump/
+CPP_encoder_decoder/Decoder_lib/Decoder_API/OMLS_Decoder.dll
+*.txt
+*.dll
+*.frm
+*.pdb
+*.wcfg
+OMLS_recorder.zip
+*.pyc
+Matlab/
