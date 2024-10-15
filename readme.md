@@ -14,8 +14,9 @@ Software for lossless Bayer CFA Image compression and decompression on PC using 
 
 # How to generate bayerCFA .bin file from .png files:
 1. For a new dataset, in `images` create new folder named `dataset`. 
-2. Then create another new folder in `dataset` called `original`. Put your png images in it. The images should be named `img_ii.png` where `ii` is image index. Or create/adjust custom file reading script (e.g. `driveNscan/png2bayerCFA_GB_drivenscan.py`)
-3. Then launch command prompt and navigate to `images` folder and run `python png2bayerCFA_GB.py -i "optomotive" -o "optomotive" -s 0 -e 15`. Run `python png2bayerCFA_GB.py -h` for help.
+2. Then create another new folder in `dataset` called `original`. Put your png images in it. 
+<!-- The images should be named `img_ii.png` where `ii` is image index. Or create/adjust custom file reading script. -->
+3. Run `GUI_png_2_bayer.py`. Specify new naming format for new images (.bin files). Recommended to leave at default `img_` for `img_xx.bin`. Alternatively, launch command prompt and navigate to `images` folder and run `python png2bayerCFA_GB.py -i "optomotive" -o "optomotive" -s 0 -e 15`. Run `python png2bayerCFA_GB.py -h` for help.
 
 # How to compress images using cpp compressor
 Cpp compressor can be used to compress .bin image files to another .bin file. Evenmore, if `DUMP_VERIFICATION` is defined in `globalDefines.hpp` when compiling `main.cpp`, compressor will dump the following files which can be used as test vectors in VHDL testbench.
@@ -80,20 +81,3 @@ Open cmd in `SW_PC\images` and run
 - -u : Unary length when decompressor switches to binary coding of positive value (2041 for no limitation. 8 recommended).
 
 Then go to `saxis_omls_compression_tb.vhd` and edit `C_IN_BAYER_0` and `C_OUT_BITSTREAM_O_0`constants.
-
-# Software CPP_encoder_decoder
-
-## OpenCL support
-
-Download necessary SDK for OpenCL development on your PC. For Windows PC with Intel i7 with Iris Xe, that is Intel's OneAPI software bundle. Install and download. If you have AMD or NVIDIA GPU, Google for "RTX8000 OpenCl SDK" or whateher the name of you GPU is.
-
-### Visual Studio Code
-In your development environment (`c_cpp_properties.json`) add folder `"C:/Program Files (x86)/Intel/oneAPI/2024.2/include/sycl"` to your `includePath` so that IDE recognises functions. Set up compiler by adding `"-I", "C:\\Program Files (x86)\\Intel\\oneAPI\\2024.2\\include\\sycl"` to `args` in `tasks.json` to compile necessarry OpenCL files. Add flags `"-L", "C:\\Program Files (x86)\\Intel\\oneAPI\\2024.2\\lib"` and `"-lOpenCL"` to `args` in `tasks.json` so that also linker will find required files. Add define `"-D INCLUDE_OPENCL"` to args in `tasks.json` to compile OPENCL implementation of decompression.
-
-### Visual Studio
-
-* Properties -> C/C++ -> All Options -> Additional Include Directories: `"C:\Program Files (x86)\Intel\oneAPI\2024.2\include\sycl"`
-* Properties -> Linker -> General -> Additional Library Dependencies: `"C:\Program Files (x86)\Intel\oneAPI\2024.2\include\sycl"`
-* Properties -> Linker -> Input -> Additional Dependencies: `"C:\Program Files (x86)\Intel\oneAPI\2024.2\lib\OpenCL.lib"`
-
-Function `identify_platforms()` in `opencl_platforms.cpp` can be used to check OpenCl compatibility and available devices on the system. 

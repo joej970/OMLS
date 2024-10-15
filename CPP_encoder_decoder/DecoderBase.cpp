@@ -69,7 +69,7 @@ std::uint32_t Reader::fetchBit_impl(
    std::size_t& byteIdx,
    std::uint8_t& byte)
 {
-    if(byteIdx == bitStream_size) {
+    if(byteIdx > bitStream_size) {
         std::cout << "All bytes have been read." << std::endl;
         throw(BASE_ERROR_ALL_BYTES_ALREADY_READ);
     }

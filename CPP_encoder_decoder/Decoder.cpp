@@ -30,7 +30,7 @@ Decoder::Decoder(
     std::cout << "Image importing time = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()
               << "[ms]" << std::endl;
 #endif
-    std::cout << "\n\nImported: " << fileName << std::endl;
+    std::cout << "Imported: " << fileName << std::endl;
 };
 
 Decoder::Decoder(const char* fileName, std::uint32_t A_init, std::uint32_t N_threshold)
@@ -48,7 +48,7 @@ Decoder::Decoder(const char* fileName, std::uint32_t A_init, std::uint32_t N_thr
     std::cout << "Image importing time = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()
               << "[ms]" << std::endl;
 #endif
-    std::cout << "\n\nImported: " << fileName << std::endl;
+    std::cout << "Imported: " << fileName << std::endl;
 };
 
 /**
@@ -94,7 +94,7 @@ headerData_t Decoder::decodeParallel()
         throw std::runtime_error("Error while reading header.");
     }
 
-    std::cout << "\nUsing CPU: Parallel decoding image size W x H : " << unsigned(headerData.width) << " x "
+    std::cout << "Using CPU: Parallel decoding image size W x H : " << unsigned(headerData.width) << " x "
               << unsigned(headerData.height) << std::endl;
 
     if(headerData.bpp == 8) {

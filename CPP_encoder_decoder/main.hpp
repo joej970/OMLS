@@ -44,18 +44,7 @@ void compressImageRangeAGOR(
    std::size_t lossyBits,
    std::vector<std::size_t>* imageSizes,
    std::size_t headerBytes);
-void compressImageRangeIdeal(
-   const char* fileName,
-   const char* folder_in,
-   const char* folder_out,
-   std::size_t imgIdx_min,
-   std::size_t imgIdx_max,
-   std::size_t unaryMaxWidth,
-   std::uint8_t bpp,
-   std::size_t lossyBits,
-   std::vector<std::size_t>* imageSizes,
-   std::size_t headerBytes);
-void decompressImageRangeAGOR(
+void decompressImageRange(
    const char* fileName,
    const char* folder_in,
    const char* folder_out,

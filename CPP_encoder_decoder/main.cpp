@@ -17,7 +17,6 @@
 #include "helpers.hpp"
 #include "main.hpp"
 
-
 // example command:
 // main.exe -i C:/DATA/Repos/OMLS_Masters_SW/images/lite_dataset -o C:/DATA/Repos/OMLS_Masters_SW/images/lite_dataset -s 0 -e 9 -l 0 -b 16 -f img_ -r 8 -d -c
 
@@ -50,19 +49,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    if(params.ideal_compress) {
-        compressImageRangeIdeal(
-           params.fileName,
-           params.folder_in,
-           params.folder_out,
-           params.imgIdx_min,
-           params.imgIdx_max,
-           params.unaryMaxWidth,
-           params.bpp,
-           params.lossyBits,
-           &widthHeight,
-           16);
-    } else if(params.compress) {
+    if(params.compress) {
         compressImageRangeAGOR(
            params.fileName,
            params.folder_in,
@@ -77,7 +64,7 @@ int main(int argc, char* argv[])
            &widthHeight,
            16);
         if(params.decompress) {
-            decompressImageRangeAGOR(
+            decompressImageRange(
                params.fileName,
                params.folder_out,
                params.folder_out,
@@ -98,7 +85,7 @@ int main(int argc, char* argv[])
             widthHeight.push_back(params.width);
             widthHeight.push_back(params.height);
         }   // end for
-        decompressImageRangeAGOR(
+        decompressImageRange(
            params.fileName,
            params.folder_in,
            params.folder_out,
@@ -120,7 +107,7 @@ int main(int argc, char* argv[])
     //                  "[width] | [height]";
     // }
 
-    std::cout << "Program finished" << std::endl;
+    std::cout << "\n****** Program finished *******" << std::endl;
 }
 
 /**
@@ -158,7 +145,6 @@ void compressImageRangeAGOR(
     for(std::size_t imgIdx = imgIdx_min; imgIdx <= imgIdx_max; imgIdx++) {
 
         sprintf(path, "%s/%s%02zu.bin", folder_in, fileName, imgIdx);
-        cout << "Check if exist: " << path << endl;
         // check if file exists
         if(!std::filesystem::exists(path)) {
             sprintf(path, "%s/bayerCFA_GB/%s%02zu.bin", folder_in, fileName, imgIdx);
@@ -176,12 +162,6 @@ void compressImageRangeAGOR(
             std::unique_ptr<Image> pImg_temp = Helpers::read_image(path, headerBytes, 0, 0);
             imageSizes->push_back(pImg_temp->getWidth());   // add width info
             imageSizes->push_back(pImg_temp->getHeight());   // add height info
-            printf("imageSizes->size() = %zu\n", imageSizes->size());
-            printf("imageSizes->data()[%zu] = %zu\n", imgIdx - imgIdx_min, imageSizes->data()[imgIdx - imgIdx_min]);
-            printf(
-               "imageSizes->data()[%zu] = %zu\n",
-               imgIdx - imgIdx_min + 1,
-               imageSizes->data()[imgIdx - imgIdx_min + 1]);
             // pImg.reset(pImg_temp.get());
             pImg.reset(pImg_temp.release());
         } else {
@@ -197,6 +177,8 @@ void compressImageRangeAGOR(
 
         cout << "Read raw image binary, width: " << pImg->getWidth() << ", height: " << pImg->getHeight() << '\n';
         cout << "Original file size: " << unsigned(pImg->getDataView().size()) << " Bytes" << endl;
+
+        auto original_image_size = pImg->getDataView().size();
 
 #ifdef DUMP_VERIFICATION
         sprintf(path, "%s/dump/%s%02zu_16pp.txt", folder_out, fileName, imgIdx);
@@ -232,10 +214,10 @@ void compressImageRangeAGOR(
         }
         // DONE
 
-        cout << "Parallel encoder: "
-             << "N/A: " << unsigned(N->data()[0]) << "/" << unsigned(A_init->data()[0])
-             << ", max Q width: " << unsigned(unaryMaxWidth) << ", file size: " << unsigned(fileSize->data()[0])
-             << " bytes" << endl;
+        std::cout << "Parallel encoder: "
+                  << "N(A): " << unsigned(N->data()[0]) << "(" << unsigned(A_init->data()[0]) << ")"
+                  << ", max Q width: " << unsigned(unaryMaxWidth) << ", file size: " << unsigned(fileSize->data()[0])
+                  << " bytes" << endl;
 
 #ifdef DUMP_VERIFICATION
         translateBinaryToASCII_hex(path);
@@ -251,98 +233,25 @@ void compressImageRangeAGOR(
         struct tm* p = localtime(&current_time);
         strftime(msg, sizeof(msg), "%a %b %m %Y %H:%M:%S", p);
 
-        wf_report << msg << " , " << fileName << unsigned(imgIdx) << ".png , " << unsigned(lossyBits)
-                  << " lossy bits, AGOR , " << unsigned(enc.getFileSize()) << " ,bytes"
-                  << ",max unary length," << unsigned(unaryMaxWidth) << std::endl;
+        float compression_ratio = float(original_image_size) / float(enc.getFileSize());
+        float effective_bpp     = 8.0f / compression_ratio;
+
+        wf_report << msg << ", " << fileName << unsigned(imgIdx) << ".png, " << unsigned(lossyBits) << " lossy bits,"
+                  << " original size: " << unsigned(original_image_size)
+                  << " B, compressed size: " << unsigned(enc.getFileSize()) << " B, CR: " << std::fixed
+                  << std::setprecision(2) << compression_ratio << ", effective BPP: " << effective_bpp << std::endl;
+
+        std::cout << "\nEncoding done: " << msg << ", " << fileName << unsigned(imgIdx) << ".png, "
+                  << unsigned(lossyBits) << " lossy bits,"
+                  << " original size: " << unsigned(original_image_size)
+                  << " B, compressed size: " << unsigned(enc.getFileSize()) << " B, CR: " << std::fixed
+                  << std::setprecision(2) << compression_ratio << ", effective BPP: " << effective_bpp << "\n"
+                  << std::endl;
     }
     wf_report.close();
 }
-void compressImageRangeIdeal(
-   const char* fileName,
-   const char* folder_in,
-   const char* folder_out,
-   std::size_t imgIdx_min,
-   std::size_t imgIdx_max,
-   std::size_t unaryMaxWidth,
-   std::uint8_t bpp,
-   std::size_t lossyBits,
-   std::vector<std::size_t>* imageSizes,
-   std::size_t headerBytes)
-{
-    std::cerr << "Ideal compression not verified, probably broken." << std::endl;
-    std::cerr << "Ideal compression not verified, probably broken." << std::endl;
-    std::cerr << "Ideal compression not verified, probably broken." << std::endl;
-    std::cerr << "Ideal compression not verified, probably broken." << std::endl;
-    std::cerr << "Ideal compression not verified, probably broken." << std::endl;
 
-    std::cout << "Ideal compression" << std::endl;
-    char path[200];
-
-    static std::ofstream wf_report;
-    sprintf(path, "%s/compressed/report.csv", folder_out);
-    wf_report.open(path, std::ios::app);
-    if(!wf_report) {
-        char msg[200];
-        std::sprintf(msg, "Cannot open specified file: %s", path);
-        throw std::runtime_error(msg);
-    }
-
-    using namespace std;
-
-    for(std::size_t imgIdx = imgIdx_min; imgIdx <= imgIdx_max; imgIdx++) {
-        sprintf(path, "%s/bayerCFA_GB/%s%02zu.bin", folder_in, fileName, imgIdx);
-        cout << "\n\nReading image: " << path << endl;
-        // Read binary image
-        pImage pImg = Helpers::read_image(path, headerBytes, 0, 0);
-        cout << "Read raw image binary, width: " << pImg->getWidth() << ", height: " << pImg->getHeight() << '\n';
-        cout << "Original file size: " << unsigned(pImg->getDataView().size() / 1024) << " kBytes" << endl;
-
-        sprintf(path, "%s/dump/%s%02zu_%zu_%04zu_16pp.txt", folder_out, fileName, imgIdx, lossyBits, unaryMaxWidth);
-        imageSizes->push_back(pImg->getWidth());
-        imageSizes->push_back(pImg->getHeight());
-
-        // Ideal
-        auto pImg_YCCC = Helpers::bayer_to_YCCC(pImg.get(), lossyBits);
-        cout << "YCCC image size, width: " << pImg_YCCC->getWidth() << ", height: " << pImg_YCCC->getHeight() << '\n';
-
-        std::unique_ptr<std::vector<std::size_t>> p_fileSize;   // = fileSize;
-
-        sprintf(
-           path,
-           "%s/compressed/%s%02zu_%zu_%04zu_ideal.bin",
-           folder_out,
-           fileName,
-           imgIdx,
-           lossyBits,
-           unaryMaxWidth);
-        cout << "Output file: " << path << endl;
-
-        // ACTUAL COMPRESSION IDEAL
-        Encoder enc{pImg_YCCC.get(), folder_out, imgIdx, lossyBits, headerBytes};
-        p_fileSize = enc.encodeUsingMethod(Encoder::method::ideal);
-        // DONE
-
-        cout << "Ideal encoder: "
-             << "img " << unsigned(imgIdx) << " Y ch: " << unsigned(p_fileSize->at(0))
-             << " bytes, Cd ch: " << unsigned(p_fileSize->at(1)) << " bytes, Cm ch: " << unsigned(p_fileSize->at(2))
-             << " bytes, Co ch: " << unsigned(p_fileSize->at(3)) << "  bytes." << endl;
-        auto total_size = p_fileSize->at(0) + p_fileSize->at(1) + p_fileSize->at(2) + p_fileSize->at(3);
-        cout << "Total file size: " << unsigned(total_size) << " bytes" << endl;
-
-        std::time_t current_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        // std::time_t current_time;   // = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        char msg[200];
-        struct tm* p = localtime(&current_time);
-        strftime(msg, sizeof(msg), "%a %b %m %Y %H:%M:%S", p);
-
-        wf_report << msg << " , " << fileName << unsigned(imgIdx) << ".png , " << unsigned(lossyBits)
-                  << " lossy bits, ideal , " << unsigned(total_size) << ", bytes" << std::endl;
-
-    }   // end for
-    wf_report.close();
-}
-
-void decompressImageRangeAGOR(
+void decompressImageRange(
    const char* fileName,
    const char* folder_in,
    const char* folder_out,
@@ -358,7 +267,7 @@ void decompressImageRangeAGOR(
    bool use_gpu)
 {
 
-    std::cout << "\nAGOR decompression" << std::endl;
+    std::cout << "\nDecompression" << std::endl;
     char path[200];
     std::size_t it = 0;
 
@@ -372,13 +281,13 @@ void decompressImageRangeAGOR(
 
         // PARELLEL IMPLEMENTATION
         try {
-            std::cout << "\nParallel implementation:" << std::endl;
+            std::cout << "Parallel implementation:" << std::endl;
             sprintf(path, "%s/compressed/%s%02zu.bin", folder_in, fileName, imgIdx);
-            std::cout << "\nLoading image at " << path << std::endl;
+            std::cout << "Loading image at " << path << std::endl;
             // Decoder
             //    dec{path, imageSizes->data()[2 * it], imageSizes->data()[2 * it + 1], A_init->data()[0], N->data()[0]};
             Decoder dec{path, A_init->data()[0], N->data()[0]};
-            std::cout << "\nLoaded image at " << path << std::endl;
+            std::cout << "Loaded image at " << path << std::endl;
 #ifdef TIMING_EN
             std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 #endif
@@ -423,7 +332,6 @@ void decompressImageRangeAGOR(
             }
 
             dec.exportBayerImage(path, header, roi, timestamp);
-            std::cout << "\nSaved an image." << std::endl;
 #ifdef TIMING_EN
             std::chrono::steady_clock::time_point end_exported = std::chrono::steady_clock::now();
             // std::cout << "Parallel decoding time = "
@@ -436,6 +344,8 @@ void decompressImageRangeAGOR(
                       << std::chrono::duration_cast<std::chrono::milliseconds>(end_exported - end).count() << "[ms]"
                       << std::endl;
 #endif
+            std::cout << "Exported decompressed image to .bin file." << std::endl;
+            std::cout << "Done with image idx:" << imgIdx << ".\n" << std::endl;
         } catch(std::runtime_error& e) {
             std::cout << "RUNTIME ERROR: \n";
             std::cout << e.what() << "\n";
@@ -476,12 +386,14 @@ void createMissingDirectories(const char* folder_out)
             std::cout << "Created new directory: " << path << std::endl;
         }
     }
+#ifdef DUMP_VERIFICATION
     sprintf(path, "%s/dump/", folder_out);
     if(!std::filesystem::exists(path)) {
         if(std::filesystem::create_directory(path)) {
             std::cout << "Created new directory: " << path << std::endl;
         }
     }
+#endif
 }
 
 void translateBinaryToASCII_hex(char* fileNameIn)

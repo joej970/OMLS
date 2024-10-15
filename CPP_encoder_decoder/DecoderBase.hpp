@@ -10,14 +10,6 @@
 #include <fstream>
 #include <iostream>
 
-#ifdef INCLUDE_OPENCL
-#    define CL_TARGET_OPENCL_VERSION 200
-#    include "OpenCL_sources/opencl_platforms.hpp"
-#    include <CL/cl.h>
-#    include <emmintrin.h>   // For SIMD operations
-#    include <immintrin.h>   // For SIMD operations
-
-#endif
 
 #ifdef TIMING_EN
 #    include <chrono>

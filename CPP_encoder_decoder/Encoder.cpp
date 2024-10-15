@@ -278,10 +278,6 @@ std::size_t Encoder::encodeParallel(std::uint16_t gb, std::uint16_t b, std::uint
                ((std::uint64_t)((std::uint16_t)2 * m_height)) << 16 |   //
                ((std::uint64_t)((std::uint16_t)2 * m_width)) << 0;
             // clang-format on
-            for(std::size_t s = 0; s < 64; s += 8) {
-                printf("Byte %zu: %02X\n", s / 8, (uint8_t)(compression_info >> s));
-            }
-            printf("Compression data: 0x%08llX\n", compression_info);
 
             pushHeader(writter, compression_info);
 
@@ -320,10 +316,6 @@ std::size_t Encoder::encodeParallel(std::uint16_t gb, std::uint16_t b, std::uint
                ((std::uint64_t)((std::uint16_t)2*m_height))      << 16 |   //
                ((std::uint64_t)((std::uint16_t)2*m_width))       << 0;
             // clang-format on
-            for(std::size_t s = 0; s < 64; s += 8) {
-                printf("Byte %zu: %02X\n", s / 8, (uint8_t)(compression_info >> s));
-            }
-            printf("Compression data: 0x%08llX\n", compression_info);
 
             pushHeader(writter, compression_info);
             // wf.write((const char*)&compression_info, sizeof(compression_info));
@@ -368,10 +360,6 @@ std::size_t Encoder::encodeParallel(std::uint16_t gb, std::uint16_t b, std::uint
                ((std::uint64_t)((std::uint16_t)2*m_height))      << 16 |   //
                ((std::uint64_t)((std::uint16_t)2*m_width))       << 0;
             // clang-format on
-            for(std::size_t s = 0; s < 64; s += 8) {
-                printf("Byte %zu: %02X\n", s / 8, (uint8_t)(compression_info >> s));
-            }
-            printf("Compression data: 0x%08llX\n", compression_info);
 
             pushHeader(writter, compression_info);
 
@@ -523,7 +511,6 @@ void Encoder::encodeParallelOneQuadrupleSeedPixel(
     // 4.) AGOR
     std::uint16_t quotient[]  = {0, 0, 0, 0};
     std::uint16_t remainder[] = {0, 0, 0, 0};
-#ifdef DUMP_VERIFICATION
     // 3.) To positive value
     std::uint16_t posValue[] = {0, 0, 0, 0};
     for(std::size_t ch = 0; ch < 4; ch++) {   //
@@ -534,6 +521,7 @@ void Encoder::encodeParallelOneQuadrupleSeedPixel(
         quotient[ch]  = posValue[ch] >> k[ch];
         remainder[ch] = posValue[ch] & (std::uint16_t)((1 << k[ch]) - 1);   // modulus op = take last k bits
     }
+#ifdef DUMP_VERIFICATION
     {
         char outputFile[200];
         sprintf(

@@ -1,9 +1,5 @@
 #pragma once
 
-#define DUMP_VERIFICATION
-
-// #define k_MIN 2
-// #define k_MAX 11 // no need for higher value
 #define N_START \
     4 + 1   // this is because of parallel implementation on FPGA where first pixel is calculated but values are ignored
 #define A_MIN 0

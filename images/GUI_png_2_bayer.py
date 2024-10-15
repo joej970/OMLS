@@ -24,8 +24,8 @@ def submit():
 
     folder_in = folder_in_entry.get()
     folder_out = folder_out_entry.get()
-    start_index = int(start_index_entry.get())
-    end_index = int(end_index_entry.get())
+    # start_index = int(start_index_entry.get())
+    # end_index = int(end_index_entry.get())
     lossy_bits = int(lossy_bits_entry.get())
     filename = filename_entry.get()
 
@@ -39,15 +39,16 @@ def submit():
     print("Filename:", filename)
     print("Folder In:", folder_in)
     print("Folder Out:", folder_out)
-    print("Start Index:", start_index)
-    print("End Index:", end_index)
+    # print("Start Index:", start_index)
+    # print("End Index:", end_index)
     print("Lossy Bits:", lossy_bits)
     print("BPP:", bpp_entry.get())
 
 
     # Open a console and run the following command:
         
-    call = f"python png2bayerCFA_GB.py -i {folder_in}/original -o {folder_out}/bayerCFA_GB -s {start_index} -e {end_index} -l {lossy_bits} -f {filename} -b {bpp_entry.get()}"
+    # call = f"python png2bayerCFA_GB.py -i {folder_in}/original -o {folder_out}/bayerCFA_GB -s {start_index} -e {end_index} -l {lossy_bits} -f {filename} -b {bpp_entry.get()}"
+    call = f"python png2bayerCFA_GB.py -i {folder_in}/original -o {folder_out}/bayerCFA_GB -l {lossy_bits} -f {filename} -b {bpp_entry.get()}"
     
     if bayerCFA_grayscale.get():
         call += " -B"
@@ -108,19 +109,19 @@ folder_out_entry.pack()
 browse_out_button = tk.Button(root, text="Browse", command=lambda: browse_directory(folder_out_entry))
 browse_out_button.pack()
 
-# Start index for image files
-start_index_label = tk.Label(root, text="Start index:")
-start_index_label.pack()
-start_index_entry = tk.Entry(root, width=10)
-start_index_entry.insert(0, "0")
-start_index_entry.pack()
+# # Start index for image files
+# start_index_label = tk.Label(root, text="Start index:")
+# start_index_label.pack()
+# start_index_entry = tk.Entry(root, width=10)
+# start_index_entry.insert(0, "0")
+# start_index_entry.pack()
 
-# End index for image files
-end_index_label = tk.Label(root, text="End index:")
-end_index_label.pack()
-end_index_entry = tk.Entry(root, width=10)
-end_index_entry.insert(0, "9")
-end_index_entry.pack()
+# # End index for image files
+# end_index_label = tk.Label(root, text="End index:")
+# end_index_label.pack()
+# end_index_entry = tk.Entry(root, width=10)
+# end_index_entry.insert(0, "9")
+# end_index_entry.pack()
 
 # Lossy bits (range 0 (default) to 3)
 lossy_bits_label = tk.Label(root, text="Lossy bits:")
